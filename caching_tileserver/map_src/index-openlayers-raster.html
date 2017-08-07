@@ -1,0 +1,40 @@
+<html>
+<head>
+  <link rel="stylesheet" href="ol.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="open_sans.css" />
+
+  <script src="ol_4.2.0.js"></script>
+  <style>
+    .map {
+      background: #f8f4f0;
+    }
+  </style>
+</head>
+<body>
+<div id="map" class="map"></div>
+<div id="mouse-position"></div>
+<script type="text/javascript">
+var map = new ol.Map({
+        controls: [
+          new ol.control.Zoom( ),
+          new ol.control.ZoomSlider( ),
+          new ol.control.MousePosition( { projection: "EPSG:4326", coordinateFormat: ol.coordinate.createStringXY(4) } )
+        ],
+        layers: [
+          new ol.layer.Tile({
+          source: new ol.source.OSM({ url: "/raster_tiles/osm_bright/{z}/{x}/{y}.png?origin=nw", numZoomLevels: 22})
+	  })
+        ],
+        target: 'map',
+        view: new ol.View({
+          center: ol.proj.transform([-98.5795, 39.8283], 'EPSG:4326', 'EPSG:3857'),
+          minZoom: 0,
+          zoom: 5
+        })
+      });
+
+</script>
+
+
+</body>
+</html>

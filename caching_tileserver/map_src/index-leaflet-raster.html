@@ -1,0 +1,114 @@
+<html>
+<head>
+  <script type="text/javascript" src="leaflet.js"></script>
+  <script type="text/javascript" src="Leaflet.VectorGrid.bundled.js"></script>
+  <script type="text/javascript" src="leaflet-realtime.js"></script>
+  <script type="text/javascript" src="leaflet-hash.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="leaflet.css"/>
+
+  <script src="mapbox-gl.js"></script>
+  <link href="mapbox-gl.css" rel='stylesheet' />
+
+  <script src="leaflet-mapbox-gl.js"></script>
+
+  <style>
+    #map { height: 100%; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script type="text/javascript">
+var map = L.map('map').setView([39.8283, -98.5795], 5);
+ATTR = '&copy;&nbsp;<a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+  '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
+
+var hash = new L.Hash(map);
+
+/*
+var gl = L.mapboxGL({
+	style: '/vector_tiles/styles/osm-bright.json',
+	accessToken: 'no-token',
+  attribution: ATTR
+}).addTo(map);
+*/
+var osmUrl='/raster_tiles/osm_bright/{z}/{x}/{y}.png?origin=nw';
+var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 22, attribution: osmAttrib}).addTo(map);
+
+var trail = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {
+                id: '0'
+            },
+            geometry: {
+                type: 'LineString',
+                coordinates: []
+            },
+            style: {
+              "color": "red"
+            }
+          },
+          {
+            type: 'Feature',
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: 'LineString',
+                coordinates: []
+            },
+            style: {
+              "color": "green"
+            }
+          }
+        ]
+    };
+
+/*
+var realtime = L.realtime(
+function(success, error) {
+        var west = map.getBounds().getWest();
+        var east = map.getBounds().getEast();
+        var south = map.getBounds().getSouth();
+        var north = map.getBounds().getNorth();
+        var bounds = "minlon=" + west.toFixed(6) + "&minlat=" + south.toFixed(6) + "&maxlon=" + east.toFixed(6) + "&maxlat=" + north.toFixed(6);
+        fetch('/rest/entities?nument=50&numobs=20' + "&" + bounds)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            success(data);
+        })
+        .catch(error);
+    }
+    , {
+        interval: 3000
+    }
+    ).addTo(map);
+*/
+
+// control position: bottomright, topright, topleft, bottomleft
+    var coorddisp = L.control({position: 'bottomleft'});
+    coorddisp.onAdd = function(map){
+        var div = L.DomUtil.create('div', 'mapcoords');
+        div.innerHTML= "";
+        div.id = "mapcoords";
+        return div;
+    }
+    coorddisp.addTo(map);
+
+function onMouseMove(e) {
+    var west = map.getBounds().getWest();
+    var east = map.getBounds().getEast();
+    var south = map.getBounds().getSouth();
+    var north = map.getBounds().getNorth();
+    document.getElementById("mapcoords").innerHTML = e.latlng.lat.toFixed(6) + "," + e.latlng.lng.toFixed(6) +
+      " [ " + west.toFixed(6) + "," + south.toFixed(6) + " -- " + east.toFixed(6) + "," + north.toFixed(6) + " ]";
+}
+map.on('mousemove', onMouseMove);
+
+</script>
+</body>
+</html>
