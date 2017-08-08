@@ -13,4 +13,5 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 docker run -it --rm -v "$DIR":/project matthewcmead/anaconda-nb-docker-centos7 /project/getpips.sh
+docker run -it --rm -v "$DIR":/project matthewcmead/anaconda-nb-docker-centos7 /bin/bash /project/getnginx.sh
 docker build -t matthewcmead/caching_tileserver .
