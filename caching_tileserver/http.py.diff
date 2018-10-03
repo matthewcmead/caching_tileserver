@@ -1,0 +1,18 @@
+--- http.py.orig	2018-10-03 17:02:37.000000000 +0000
++++ http.py	2018-10-03 18:17:09.452237687 +0000
+@@ -240,10 +240,11 @@
+     ('https://localhost/bar', ('bar', 'foo#;%$'))
+     """
+     username = password = None
+-    if '@' in url:
+-        head, url = url.rsplit('@', 1)
+-        schema, auth_data = head.split('//', 1)
+-        url = schema + '//' + url
++    method, after_method = url.split('//', 1)
++    auth_and_host, uri = url.split('/', 1)
++    if '@' in auth_and_host:
++        auth_data, host = auth_and_host.rsplit('@', 1)
++        url = method + '//' + host + '/' + uri
+         if ':' in auth_data:
+             username, password = auth_data.split(':', 1)
+         else:

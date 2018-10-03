@@ -2,6 +2,7 @@ services:
   #sets up how to make the source data available
   demo:
   tms:
+    origin: 'nw'
   wms:
     #srs sets the coordinate reference systems as which you want to make your data available. MapProxy reprojects the source data very well to these projections.
     srs: ['EPSG:900913','EPSG:3857']
@@ -33,24 +34,59 @@ layers:
   - name: klokantech
     title: Open Map Tiles in Klokantech Style
     sources: [klokantech_cache]
+  - name: dark_matter
+    title: Open Map Tiles in Dark Matter Style
+    sources: [dark_matter_cache]
+  - name: fiord_color
+    title: Open Map Tiles in Fiord Color Style
+    sources: [fiord_color_cache]
+  - name: positron
+    title: Open Map Tiles in Positron Style
+    sources: [positron_cache]
     
 caches:
   #setup the cache for the open streetmap tiles. This cache is used by the layer above.
   osm_bright_cache:
     sources: [osm_bright_tiles]
     format: image/png
+    grids: [osm_grid]
   klokantech_cache:
     sources: [klokantech_tiles] #here you set what source data (defined below) you want to cache
     format: image/png
+    grids: [osm_grid]
+  dark_matter_cache:
+    sources: [dark_matter_tiles] #here you set what source data (defined below) you want to cache
+    format: image/png
+    grids: [osm_grid]
+  fiord_color_cache:
+    sources: [fiord_color_tiles] #here you set what source data (defined below) you want to cache
+    format: image/png
+    grids: [osm_grid]
+  positron_cache:
+    sources: [positron_tiles] #here you set what source data (defined below) you want to cache
+    format: image/png
+    grids: [osm_grid]
   
 sources:
    osm_bright_tiles:
      type: tile
-     url: http://PROXY_HOST_TILESERVER:8080/styles/osm-bright/rendered/%(tms_path)s@2x.%(format)s
+     url: 'http://PROXY_HOST_TILESERVER:8080/styles/osm-bright/%(tms_path)s@2x.%(format)s'
      grid: osm_grid #the grid to use for the osm tiles. This is really important. It is specified below.
    klokantech_tiles:
      type: tile
-     url: http://PROXY_HOST_TILESERVER:8080/styles/klokantech-basic/rendered/%(tms_path)s@2x.%(format)s
+     url: 'http://PROXY_HOST_TILESERVER:8080/styles/klokantech-basic/%(tms_path)s@2x.%(format)s'
+     grid: osm_grid #the grid to use for the osm tiles. This is really important. It is specified below.
+   dark_matter_tiles:
+     type: tile
+     url: 'http://PROXY_HOST_TILESERVER:8080/styles/dark_matter/%(tms_path)s@2x.%(format)s'
+     grid: osm_grid #the grid to use for the osm tiles. This is really important. It is specified below.
+   fiord_color_tiles:
+     type: tile
+     url: 'http://PROXY_HOST_TILESERVER:8080/styles/fiord-color/%(tms_path)s@2x.%(format)s'
+     grid: osm_grid #the grid to use for the osm tiles. This is really important. It is specified below.
+   positron_tiles:
+     type: tile
+     url: 'http://PROXY_HOST_TILESERVER:8080/styles/positron/%(tms_path)s@2x.%(format)s'
      grid: osm_grid #the grid to use for the osm tiles. This is really important. It is specified below.
 
 

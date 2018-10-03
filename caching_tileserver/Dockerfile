@@ -33,7 +33,12 @@ COPY nginx_repo /tmp
 #      epel-release \
 RUN yum install -y \
       nginx \
+      patch \
 &&  yum clean all
+
+COPY http.py.diff /opt/conda/lib/python3.6/site-packages/mapproxy/client 
+RUN cd /opt/conda/lib/python3.6/site-packages/mapproxy/client \
+&&  patch -p0 <http.py.diff
 
 COPY bin/tini /tini
 RUN chmod 755 /tini
